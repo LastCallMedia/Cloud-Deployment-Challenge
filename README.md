@@ -1,6 +1,6 @@
 # In a nutshell:
 
-Cloud Deployment Challenge is brought to you by your friends at [Last Call Media](https://www.lastcallmedia.com), it is designed to assess your skills and to see how you solve problems.Please fork this repo and then use a common IaC tool to host the content in `web/` on AWS and password protect the hosted site
+Cloud Deployment Challenge is brought to you by your friends at [Last Call Media](https://www.lastcallmedia.com), it is designed to assess your skills and to see how you solve problems. Please fork this repo and then use a common IaC tool to host the content in `web/` on AWS and password protect the hosted site
 
 We anticipate this will take about two hours. If you're still working on it after two hours please stop and send us what you have. This is more about seeing how you approach the problem
 
