@@ -43,17 +43,14 @@
 
 ## The Problem Space
 - Potential Solutions
-    - Static Website Deployment 
+    - (YES) Static Website Deployment 
         - Upload the `web/index.html` file to an S3 bucket 
         - Serve the files in the bucket via CloudFront 
-    - Convert website to a SPA and deploy to CloudFront
+    - (NO) Convert website to a SPA and deploy to CloudFront
         - Protect with username and password using Cognito
         - Deploy the SPA to CloudFront
-    - 
-
-
-
-## The Solution Space
+    - (yes) Use CloudFront Functions to protect the website
+        - Use a cloudfront function to protect the website
 
 
 
