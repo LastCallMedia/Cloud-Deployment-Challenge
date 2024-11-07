@@ -87,7 +87,6 @@ export class WebsiteStack extends cdk.Stack {
       distributionPaths: ["/*"], // The file paths to invalidate in the CloudFront distribution cache.
       destinationBucket: props.bucket,
       retainOnDelete: false,
-      memoryLimit: 512,
     });
   }
 }
