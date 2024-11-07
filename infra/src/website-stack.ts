@@ -7,17 +7,20 @@ import * as cloudfront from 'aws-cdk-lib/aws-cloudfront';
 import * as cloudfrontOrigins from 'aws-cdk-lib/aws-cloudfront-origins';
 
 export class WebsiteStack extends cdk.Stack {
-  public readonly s3OriginBucket: s3.Bucket;
-
+  public readonly originBucket: s3.Bucket;
+  public readonly distribution: cloudfront.Distribution;
+  
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
 
     const authCloudFrontFunction = this._createAuthCloudFrontFunction({
       filePath: path.join(__dirname, '../functions/auth.js'),
     });
-    this.s3OriginBucket = this._createS3OriginBucket();
-    this._createCloudFrontDistribution({
-      bucket: this.s3OriginBucket,
+
+    this.originBucket = this._createS3OriginBucket();
+
+    this.distribution = this._createCloudFrontDistribution({
+      bucket: this.originBucket,
       authFunction: authCloudFrontFunction,
     });
   }
@@ -46,8 +49,8 @@ export class WebsiteStack extends cdk.Stack {
   private _createCloudFrontDistribution(props: {
     bucket: s3.Bucket;
     authFunction: cloudfront.Function;
-  }) {
-    new cloudfront.Distribution(this, 'Distribution', {
+  }): cloudfront.Distribution {
+    return new cloudfront.Distribution(this, 'Distribution', {
       defaultBehavior: {
         origin: cloudfrontOrigins.S3BucketOrigin.withOriginAccessControl(props.bucket),
         functionAssociations: [{
