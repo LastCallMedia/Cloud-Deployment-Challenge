@@ -5,11 +5,12 @@ import { Construct } from 'constructs';
 import * as s3 from 'aws-cdk-lib/aws-s3';
 import * as cloudfront from 'aws-cdk-lib/aws-cloudfront';
 import * as cloudfrontOrigins from 'aws-cdk-lib/aws-cloudfront-origins';
+import * as s3Deployment from 'aws-cdk-lib/aws-s3-deployment';
 
 export class WebsiteStack extends cdk.Stack {
   public readonly originBucket: s3.Bucket;
   public readonly distribution: cloudfront.Distribution;
-  
+
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
 
@@ -22,6 +23,17 @@ export class WebsiteStack extends cdk.Stack {
     this.distribution = this._createCloudFrontDistribution({
       bucket: this.originBucket,
       authFunction: authCloudFrontFunction,
+    });
+
+    this._websiteDeployment({
+      bucket: this.originBucket,
+      distribution: this.distribution,
+      siteSourcePath: path.join(__dirname, '..', '..', 'web'),
+    });
+
+    new cdk.CfnOutput(this, 'distributionUrl', {
+      value: `https://${this.distribution.domainName}`,
+      exportName: 'distributionUrl',
     });
   }
 
@@ -60,6 +72,22 @@ export class WebsiteStack extends cdk.Stack {
         viewerProtocolPolicy: cloudfront.ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
       },
       defaultRootObject: 'index.html',
+    });
+  }
+
+  private _websiteDeployment(props: {
+    bucket: s3.Bucket;
+    distribution: cloudfront.Distribution;
+    siteSourcePath: string;
+  }) {
+
+    return new s3Deployment.BucketDeployment(this, "StaticWebsiteDeployment", {
+      sources: [s3Deployment.Source.asset(props.siteSourcePath)],
+      distribution: props.distribution,
+      distributionPaths: ["/*"], // The file paths to invalidate in the CloudFront distribution cache.
+      destinationBucket: props.bucket,
+      retainOnDelete: false,
+      memoryLimit: 512,
     });
   }
 }
