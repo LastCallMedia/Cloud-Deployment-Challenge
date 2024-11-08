@@ -24,9 +24,9 @@ jobs:
         with:
           role-to-assume: arn:aws:iam::${{ env.AWS_ACCOUNT_ID }}:role/LCM-ChallengeGitHubActionsRole
           aws-region: ${{ env.AWS_REGION }}
-      - name: List all S3 buckets
+      - name: log site to the console
         run: |
-          aws s3 ls && echo ${{ env.JUST_TESTING }}
+          cat web/index.html
 
 
     
