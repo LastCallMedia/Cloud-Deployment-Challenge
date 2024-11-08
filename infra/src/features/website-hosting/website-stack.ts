@@ -37,6 +37,11 @@ export class WebsiteStack extends cdk.Stack {
       authFunction,
     });
 
+    this._websiteDeployment({
+      appName: props.appName,
+      websitePath: props.websitePath,
+    });
+
     // Output the CloudFront URL
     new cdk.CfnOutput(this, 'distributionDomainName', {
       value: this.distribution.distributionDomainName,
@@ -51,15 +56,6 @@ export class WebsiteStack extends cdk.Stack {
     new cdk.CfnOutput(this, 'cloudFrontDistributionId', {
       value: this.distribution.distributionId,
       exportName: `cloudFrontDistributionId`,
-    });
-
-    // Add S3 deployment
-    new s3deploy.BucketDeployment(this, "WebsiteDeployment", {
-      sources: [s3deploy.Source.asset(props.websitePath)],
-      distribution: this.distribution,
-      distributionPaths: ["/*"],
-      destinationBucket: this.websiteBucket,
-      retainOnDelete: false,
     });
   }
 
@@ -97,6 +93,19 @@ export class WebsiteStack extends cdk.Stack {
         viewerProtocolPolicy: cloudfront.ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
       },
       defaultRootObject: 'index.html',
+    });
+  }
+
+  private _websiteDeployment(props: {
+    appName: string;
+    websitePath: string;
+  }): s3deploy.BucketDeployment {
+    return new s3deploy.BucketDeployment(this, `${props.appName}WebsiteDeployment`, {
+      sources: [s3deploy.Source.asset(props.websitePath)],
+      distribution: this.distribution,
+      distributionPaths: ["/*"],
+      destinationBucket: this.websiteBucket,
+      retainOnDelete: false,
     });
   }
 }

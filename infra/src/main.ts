@@ -22,7 +22,7 @@ const websiteStack = new WebsiteStack(app, `${appName}WebsiteStack`, {
 
   /* For more information, see https://docs.aws.amazon.com/cdk/latest/guide/environments.html */
   appName,
-  cloudFrontFunctionPath: path.join(__dirname, 'auth.js'),
+  cloudFrontFunctionPath: path.join(__dirname, 'features', 'website-hosting', 'auth.js'),
   websitePath: path.join(__dirname, '..', '..', 'web'),
 });
 
