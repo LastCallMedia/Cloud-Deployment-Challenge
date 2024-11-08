@@ -199,14 +199,17 @@ Created a few helper scripts to streamline the deployment process:
 
 ## Meeting Requirements 
 1. Maintainability
+
 I focused on making the solution easy to understand, modify, and reuse. Each stack is organized in its own file, named after the feature it implements, and operates like a "black box." You simply pass in the required parameters, and the stack handles the rest.
 
 To ensure easy deployment in any AWS account and adaptability for any GitHub repository, I chose AWS CDK for infrastructure as code and GitHub Actions for CI/CD. Using CDK allows anyone to replicate the setup by running CDK commands in their AWS environment, and the GitHub Actions workflow is straightforward to configure for any repository.
     
 2. Automation
+
 I wanted the deployment process to be fully automated, so I set up a GitHub Actions workflow that triggers on any change to the main branch. The workflow detects changes, builds the site, and deploys it to S3, all without manual steps. It also automates the creation of GitHub secrets needed for deployment and handles CloudFront cache invalidation to ensure the latest content is always served.
 
 3. Security 
+
 I set up an Origin Access Identity (OAI) for the S3 bucket, so only CloudFront can access the content, keeping the bucket private.
 
 Using an OIDC provider creates a trust relationship between GitHub and AWS, allowing GitHub to assume an IAM role in AWS without needing AWS credentials stored in the GitHub repository. This keeps the solution more secure.
@@ -214,6 +217,7 @@ Using an OIDC provider creates a trust relationship between GitHub and AWS, allo
 Finally, CloudFront redirects HTTP to HTTPS, which is especially important when using HTTP Basic Authentication since it transmits data in base64 encoding rather than encrypting it.
 
 4. Inexpensive
+
 Cost efficiency was key in my decisions. CloudFront functions are significantly cheaper than Lambda@Edge, making them ideal for basic authentication tasks. Hosting the static site on S3 is also very affordable, with costs based only on storage and data transfer, and no need to manage servers.
 
 CloudFront caches the site content globally, reducing the load on S3 and saving on data transfer costs. Altogether, this setup keeps expenses low while still providing a secure and reliable solution.
