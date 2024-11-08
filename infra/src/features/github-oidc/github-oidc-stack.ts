@@ -52,9 +52,9 @@ export class GithubStack extends cdk.Stack {
         conditions,
       ),
       // maxSessionDuration: cdk.Duration.hours(1),
-      managedPolicies: [
-        iam.ManagedPolicy.fromAwsManagedPolicyName('AdministratorAccess'),
-      ],
+      // managedPolicies: [
+      //   iam.ManagedPolicy.fromAwsManagedPolicyName('AdministratorAccess'),
+      // ],
       inlinePolicies: {
         'GitHubActionsPolicy': new iam.PolicyDocument({
           statements: [
