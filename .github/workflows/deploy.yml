@@ -9,12 +9,11 @@ permissions:
   id-token: write
   contents: read
 env:
-  AWS_ACCOUNT_ID: "152725004650"
-  AWS_REGION: "us-east-1"
-  JUST_TESTING: ${{ secrets.JUST_TESTING }}
+  AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
+  AWS_REGION: ${{ secrets.AWS_REGION }}
 jobs:
-  apply:
-    name: Terraform apply
+  deploy:
+    name: deploy website
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repo
@@ -22,11 +21,14 @@ jobs:
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          role-to-assume: arn:aws:iam::${{ env.AWS_ACCOUNT_ID }}:role/LCM-ChallengeGitHubActionsRole
+          role-to-assume: ${{ secrets.ROLE_TO_ASSUME }}
           aws-region: ${{ env.AWS_REGION }}
-      - name: log site to the console
+      - name: Upload website to S3
         run: |
-          cat web/index.html
+          aws s3 cp web/index.html s3://${{ secrets.S3_BUCKET_NAME }}/index.html
+          aws cloudfront create-invalidation \
+            --distribution-id ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }} \
+            --paths "/*"
 
 
     
