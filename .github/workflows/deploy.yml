@@ -11,6 +11,7 @@ permissions:
 env:
   AWS_ACCOUNT_ID: "152725004650"
   AWS_REGION: "us-east-1"
+  JUST_TESTING: ${{ secrets.JUST_TESTING }}
 jobs:
   apply:
     name: Terraform apply
@@ -25,6 +26,7 @@ jobs:
           aws-region: ${{ env.AWS_REGION }}
       - name: List all S3 buckets
         run: |
-          aws s3 ls
+          aws s3 ls && echo ${{ env.JUST_TESTING }}
+
 
     
