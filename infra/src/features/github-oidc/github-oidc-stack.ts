@@ -51,10 +51,6 @@ export class GithubStack extends cdk.Stack {
         githubProvider.openIdConnectProviderArn,
         conditions,
       ),
-      // maxSessionDuration: cdk.Duration.hours(1),
-      // managedPolicies: [
-      //   iam.ManagedPolicy.fromAwsManagedPolicyName('AdministratorAccess'),
-      // ],
       inlinePolicies: {
         'GitHubActionsPolicy': new iam.PolicyDocument({
           statements: [
