@@ -1,5 +1,7 @@
 {
-  "WebsiteStack": {
-    "distributionUrl": "https://d1r4opoazfnynv.cloudfront.net"
+  "LCM-ChallengeWebsiteStack": {
+    "websiteBucketName": "lcm-challengewebsitestack-lcmchallengewebsitebucke-ecrclvtlxfj8",
+    "cloudFrontDistributionId": "E7A0Z9JCY3018",
+    "distributionDomainName": "dcqoiiglfap9l.cloudfront.net"
   }
 }

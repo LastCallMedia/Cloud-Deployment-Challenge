@@ -1,10 +1,13 @@
 #!/usr/bin/env node
 import 'source-map-support/register';
 import * as cdk from 'aws-cdk-lib';
-import { WebsiteStack } from './website-stack';
+import { WebsiteStack } from './features/website-hosting/website-stack';
+import path = require('path');
+
+const appName = 'LCM-Challenge'
 
 const app = new cdk.App();
-const websiteStack = new WebsiteStack(app, 'WebsiteStack', {
+const websiteStack = new WebsiteStack(app, `${appName}WebsiteStack`, {
   /* If you don't specify 'env', this stack will be environment-agnostic.
    * Account/Region-dependent features and context lookups will not work,
    * but a single synthesized template can be deployed anywhere. */
@@ -18,5 +21,8 @@ const websiteStack = new WebsiteStack(app, 'WebsiteStack', {
   // env: { account: '123456789012', region: 'us-east-1' },
 
   /* For more information, see https://docs.aws.amazon.com/cdk/latest/guide/environments.html */
+  appName,
+  cloudFrontFunctionPath: path.join(__dirname, 'auth.js'),
+  websitePath: path.join(__dirname, '..', '..', 'web'),
 });
 
