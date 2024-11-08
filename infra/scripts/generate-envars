@@ -1,0 +1,43 @@
+#!/usr/bin/env node
+
+const fs = require('fs');
+const path = require('path');
+const { execSync } = require('child_process');
+
+
+function generateEnvFile() {
+    // Read the CDK outputs file
+    const cdkOutputs = JSON.parse(fs.readFileSync(path.join(__dirname, '../cdk-outputs.json'), 'utf8'));
+
+    // Get AWS Account ID and Region using child_process
+    const awsAccountId = execSync('aws sts get-caller-identity --query "Account" --output text').toString().trim();
+    const awsRegion = execSync('aws configure get region').toString().trim();
+
+    // Extract values from CDK outputs
+    const {
+        websiteBucketName,
+        cloudFrontDistributionId
+    } = cdkOutputs['LCM-ChallengeWebsiteStack'];
+
+    const {
+        gitHubActionsRoleArn
+    } = cdkOutputs['LCM-ChallengeGithubStack'];
+
+    // Create GitHub secrets content
+    const secrets = {
+        AWS_ACCOUNT_ID: awsAccountId,
+        AWS_REGION: awsRegion,
+        ROLE_TO_ASSUME: gitHubActionsRoleArn,
+        S3_BUCKET_NAME: websiteBucketName,
+        CLOUDFRONT_DISTRIBUTION_ID: cloudFrontDistributionId
+    };
+
+    // Write secrets to file that can be imported into GitHub Actions
+    const secretsOutput = Object.entries(secrets)
+        .map(([key, value]) => `${key}=${value}`)
+        .join('\n');
+
+    fs.writeFileSync(path.join(__dirname, '../.env'), secretsOutput);
+}
+
+generateEnvFile();
