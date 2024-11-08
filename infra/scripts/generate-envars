@@ -5,7 +5,7 @@ const path = require('path');
 const { execSync } = require('child_process');
 
 
-function generateEnvFile() {
+function generateEnvFile(appName) {
     // Read the CDK outputs file
     const cdkOutputs = JSON.parse(fs.readFileSync(path.join(__dirname, '../cdk-outputs.json'), 'utf8'));
 
@@ -26,6 +26,7 @@ function generateEnvFile() {
     // Create GitHub secrets content
     const secrets = {
         AWS_ACCOUNT_ID: awsAccountId,
+        APP_NAME: appName,
         AWS_REGION: awsRegion,
         ROLE_TO_ASSUME: gitHubActionsRoleArn,
         S3_BUCKET_NAME: websiteBucketName,
@@ -40,4 +41,4 @@ function generateEnvFile() {
     fs.writeFileSync(path.join(__dirname, '../.env'), secretsOutput);
 }
 
-generateEnvFile();
+generateEnvFile("LCM-Challenge");

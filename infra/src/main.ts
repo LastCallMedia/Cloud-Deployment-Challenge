@@ -31,5 +31,5 @@ new GithubStack(app, `${appName}GithubStack`, {
   appName,
   distribution: websiteStack.distribution,
   websiteBucket: websiteStack.websiteBucket,
-
+  allowedRepositories: ['repo:sergiopichardo/Cloud-Deployment-Challenge:*'],
 });

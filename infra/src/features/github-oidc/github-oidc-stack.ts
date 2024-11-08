@@ -9,6 +9,7 @@ interface GithubStackProps extends cdk.StackProps {
   appName: string;
   distribution: cloudfront.Distribution;
   websiteBucket: s3.Bucket;
+  allowedRepositories: string[];
 }
 
 export class GithubStack extends cdk.Stack {
@@ -31,10 +32,7 @@ export class GithubStack extends cdk.Stack {
 
 
     // CONDITIONS
-    const allowedRepositories = [
-      // Update format to match GitHub's expected format
-      'repo:sergiopichardo/Cloud-Deployment-Challenge:*'
-    ]
+    const allowedRepositories = props.allowedRepositories;
 
     const conditions: iam.Conditions = {
       StringEquals: {

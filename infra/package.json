@@ -1,5 +1,5 @@
 {
-  "name": "infra",
+  "name": "@cloud-deployment-challenge/infra",
   "version": "0.1.0",
   "bin": {
     "infra": "bin/infra.js"
@@ -10,7 +10,11 @@
     "test": "jest",
     "cdk": "cdk",
     "deploy": "make deploy",
-    "destroy": "make destroy"
+    "destroy": "make destroy",
+    "generate-envars": "node scripts/generate-envars",
+    "delete-secrets": "sh scripts/delete-github-secrets",
+    "create-secrets": "sh scripts/create-github-secrets",
+    "postdeploy": "npm run generate-envars && npm run delete-secrets && npm run create-secrets"
   },
   "devDependencies": {
     "@types/jest": "^29.5.12",
@@ -25,5 +29,13 @@
     "aws-cdk-lib": "2.160.0",
     "constructs": "^10.0.0",
     "source-map-support": "^0.5.21"
-  }
+  },
+  "description": "In this README I will outline my solution to the Last Call Media Cloud Deployment Challenge.",
+  "main": "jest.config.js",
+  "directories": {
+    "test": "test"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
 }
