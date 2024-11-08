@@ -3,11 +3,12 @@ import 'source-map-support/register';
 import * as cdk from 'aws-cdk-lib';
 import { WebsiteStack } from './features/website-hosting/website-stack';
 import path = require('path');
+import { GithubStack } from './features/github-oidc/github-oidc-stack';
 
 const appName = 'LCM-Challenge'
 
 const app = new cdk.App();
-const websiteStack = new WebsiteStack(app, `${appName}WebsiteStack`, {
+new WebsiteStack(app, `${appName}WebsiteStack`, {
   /* If you don't specify 'env', this stack will be environment-agnostic.
    * Account/Region-dependent features and context lookups will not work,
    * but a single synthesized template can be deployed anywhere. */
@@ -26,3 +27,6 @@ const websiteStack = new WebsiteStack(app, `${appName}WebsiteStack`, {
   websitePath: path.join(__dirname, '..', '..', 'web'),
 });
 
+new GithubStack(app, `${appName}GithubStack`, {
+  appName,
+});

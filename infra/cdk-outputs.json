@@ -3,5 +3,8 @@
     "websiteBucketName": "lcm-challengewebsitestack-lcmchallengewebsitebucke-ecrclvtlxfj8",
     "cloudFrontDistributionId": "E7A0Z9JCY3018",
     "distributionDomainName": "dcqoiiglfap9l.cloudfront.net"
+  },
+  "LCM-ChallengeGithubStack": {
+    "GitHubActionsRoleArn": "arn:aws:iam::152725004650:role/LCM-ChallengeGitHubActionsRole"
   }
 }

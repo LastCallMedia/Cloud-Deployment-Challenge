@@ -34,4 +34,4 @@ override.tf.json
 terraform.rc
 
 # Ignore CDK output files
-cdk-outputs.json
+infra/cdk-outputs.json
