@@ -5,7 +5,7 @@ import { WebsiteStack } from './features/website-hosting/website-stack';
 import path = require('path');
 import { GithubStack } from './features/github-oidc/github-oidc-stack';
 
-const appName = 'LCM-Challenge'
+const appName = process.env.APP_NAME || 'LCM-Challenge'
 
 const app = new cdk.App();
 new WebsiteStack(app, `${appName}WebsiteStack`, {
