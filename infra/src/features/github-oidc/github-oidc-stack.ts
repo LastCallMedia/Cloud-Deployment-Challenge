@@ -1,23 +1,32 @@
 import { Construct } from 'constructs';
 import * as cdk from 'aws-cdk-lib';
 import * as iam from 'aws-cdk-lib/aws-iam';
+import * as cloudfront from 'aws-cdk-lib/aws-cloudfront';
+import * as s3 from 'aws-cdk-lib/aws-s3';
 
 
 interface GithubStackProps extends cdk.StackProps {
   appName: string;
+  distribution: cloudfront.Distribution;
+  websiteBucket: s3.Bucket;
 }
 
 export class GithubStack extends cdk.Stack {
-  githubDomain = 'token.actions.githubusercontent.com';
-  clientId = 'sts.amazonaws.com';
-
   constructor(scope: Construct, id: string, props: GithubStackProps) {
     super(scope, id, props);
 
-    const githubProvider = this._githubOidcProvider({
-      appName: props.appName,
-      providerUrl: `https://${this.githubDomain}`,
-      clientIds: [this.clientId],
+    const githubDomain = 'token.actions.githubusercontent.com';
+    const clientId = 'sts.amazonaws.com';
+
+    /**
+     * Creates an OpenIdConnectProvider for GitHub OIDC
+     *  - appName: the name of the app
+     *  - providerUrl: where github generates and stores its OIDC tokens
+     *  - clientIds: the client IDs that are allowed to use the tokens, in this case, it's STS used for IAM authentication
+     */
+    const githubProvider = new iam.OpenIdConnectProvider(this, `${props.appName}GithubOidcProvider`, {
+      url: `https://${githubDomain}`,
+      clientIds: [clientId],
     });
 
 
@@ -29,10 +38,10 @@ export class GithubStack extends cdk.Stack {
 
     const conditions: iam.Conditions = {
       StringEquals: {
-        [`${this.githubDomain}:aud`]: this.clientId,
+        [`${githubDomain}:aud`]: clientId,
       },
       StringLike: {
-        [`${this.githubDomain}:sub`]: allowedRepositories,
+        [`${githubDomain}:sub`]: allowedRepositories,
       },
     };
 
@@ -46,31 +55,28 @@ export class GithubStack extends cdk.Stack {
       managedPolicies: [
         iam.ManagedPolicy.fromAwsManagedPolicyName('AdministratorAccess'),
       ],
+      inlinePolicies: {
+        'GitHubActionsPolicy': new iam.PolicyDocument({
+          statements: [
+            new iam.PolicyStatement({
+              actions: ['s3:*'],
+              resources: [
+                props.websiteBucket.bucketArn,
+                `${props.websiteBucket.bucketArn}/*`,
+              ],
+            }),
+            new iam.PolicyStatement({
+              actions: ['cloudfront:*'],
+              resources: [`arn:aws:cloudfront::${cdk.Stack.of(this).account}:distribution/${props.distribution.distributionId}`],
+            }),
+          ],
+        }),
+      },
     });
 
     new cdk.CfnOutput(this, 'gitHubActionsRoleArn', {
       value: githubActionsRole.roleArn,
       exportName: `gitHubActionsRoleArn`,
-    });
-  }
-
-  /**
-   * Creates an OpenIdConnectProvider for GitHub OIDC
-   * @param props 
-   *  - appName: the name of the app
-   *  - providerUrl: where github generates and stores its OIDC tokens
-   *  - clientIds: the client IDs that are allowed to use the tokens, in this case, it's STS used for IAM authentication
-   * @returns iam.OpenIdConnectProvider
-   */
-  private _githubOidcProvider(props: {
-    appName: string;
-    providerUrl: string;
-    clientIds: string[];
-  }): iam.OpenIdConnectProvider {
-
-    return new iam.OpenIdConnectProvider(this, `${props.appName}GithubOidcProvider`, {
-      url: props.providerUrl,
-      clientIds: props.clientIds,
     });
   }
 }

@@ -8,7 +8,7 @@ import { GithubStack } from './features/github-oidc/github-oidc-stack';
 const appName = process.env.APP_NAME || 'LCM-Challenge'
 
 const app = new cdk.App();
-new WebsiteStack(app, `${appName}WebsiteStack`, {
+const websiteStack = new WebsiteStack(app, `${appName}WebsiteStack`, {
   /* If you don't specify 'env', this stack will be environment-agnostic.
    * Account/Region-dependent features and context lookups will not work,
    * but a single synthesized template can be deployed anywhere. */
@@ -29,4 +29,7 @@ new WebsiteStack(app, `${appName}WebsiteStack`, {
 
 new GithubStack(app, `${appName}GithubStack`, {
   appName,
+  distribution: websiteStack.distribution,
+  websiteBucket: websiteStack.websiteBucket,
+
 });
