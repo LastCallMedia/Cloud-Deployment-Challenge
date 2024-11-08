@@ -48,8 +48,9 @@ export class GithubStack extends cdk.Stack {
       ],
     });
 
-    new cdk.CfnOutput(this, 'GitHubActionsRoleArn', {
+    new cdk.CfnOutput(this, 'gitHubActionsRoleArn', {
       value: githubActionsRole.roleArn,
+      exportName: `gitHubActionsRoleArn`,
     });
   }
 
