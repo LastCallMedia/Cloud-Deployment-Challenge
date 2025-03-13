@@ -22,7 +22,7 @@ You have full access to `us-east-1` and `us-west-2`. Credentials should have bee
 - A URL that can be accessed from the internet and prompts for a username and password
 	- It’s fine if the URL contains an AWS-owned domain or an IP. After authenticating, the site in `web/` is displayed by a web browser
 - Username and password that we can use to authenticate
-- Link to the forked repo containing your solution
+- Share your private repo with the people you were asked to share with
 - A README with a brief explanation of your solution and anything else you’d like us to know
 
 **Please be prepared to talk about your solution and to help troubleshoot if we can’t make it work**
