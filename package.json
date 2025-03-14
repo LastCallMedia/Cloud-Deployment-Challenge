@@ -1,0 +1,12 @@
+{
+  "name": "cloud-deployment-challenge",
+  "workspaces": [
+    "infra"
+  ],
+  "scripts": {
+    "deploy": "npm run deploy --workspace=infra"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
